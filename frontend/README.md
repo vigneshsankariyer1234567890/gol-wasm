@@ -1,0 +1,1 @@
+Hosting the frontend for the game of life application.
