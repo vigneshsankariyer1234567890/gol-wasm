@@ -8,6 +8,6 @@ extern "C" {
 }
 
 #[wasm_bindgen]
-pub fn greet() {
-    alert("Hello, gol-wasm!");
+pub fn greet(name: &str) {
+    alert(&format!("Hello, {}!", name));
 }
