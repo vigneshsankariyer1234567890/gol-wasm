@@ -5,7 +5,7 @@ export class UniverseRenderer {
   private readonly canvas: HTMLCanvasElement;
   private readonly ctx: CanvasRenderingContext2D | null;
 
-  public static readonly CELL_SIZE = 5; // px
+  public static readonly CELL_SIZE = 0.5; // px
   public static readonly GRID_COLOR = "#CCCCCC";
   public static readonly DEAD_COLOR = "#FFFFFF";
   public static readonly ALIVE_COLOR = "#000000";
