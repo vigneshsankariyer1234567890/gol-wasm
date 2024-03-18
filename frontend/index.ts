@@ -3,9 +3,9 @@ import { Universe as TsUniverse } from "./Universe/Universe";
 import { initAndRunRenderer } from "./UniverseRenderer/UniverseRenderer";
 import { FPSTimer } from "./FPSTimer/FPSTimer";
 
-const HEIGHT = 300;
-const WIDTH = 300;
-const SEED = 999999999n;
+const HEIGHT = 200;
+const WIDTH = 200;
+const SEED = 123456789n;
 
 const wasmUniverse = new WasmUniverse(HEIGHT, WIDTH, SEED);
 const tsUniverse = new TsUniverse(HEIGHT, WIDTH, SEED);

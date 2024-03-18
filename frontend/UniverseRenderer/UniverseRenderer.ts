@@ -1,6 +1,7 @@
 import { FPSTimer } from "../FPSTimer/FPSTimer";
 import { IUniverse } from "../Universe/types";
 
+const TICKS_PER_RENDER = 20;
 export class UniverseRenderer {
   private readonly universe: IUniverse;
   private readonly canvas: HTMLCanvasElement;
@@ -42,7 +43,7 @@ export class UniverseRenderer {
 
   public renderLoop = () => {
     this.fpsTimer.render();
-    this.universe.tick();
+    this.accelerateTicks();
     this.drawGrid();
     this.drawCells();
     this.animationId = requestAnimationFrame(this.renderLoop);
@@ -74,13 +75,25 @@ export class UniverseRenderer {
 
     this.ctx.beginPath();
 
-    for (let row = 0; row < this.universe.height(); row++) {
-      for (let col = 0; col < this.universe.width(); col++) {
-        const idx = row * this.universe.width() + col;
-        const alive = this.universe.cell_state(idx);
+    this.drawCellsWithColor(this.ctx, true, UniverseRenderer.ALIVE_COLOR);
+    this.drawCellsWithColor(this.ctx, false, UniverseRenderer.DEAD_COLOR);
 
-        this.ctx.fillStyle = alive ? UniverseRenderer.ALIVE_COLOR : UniverseRenderer.DEAD_COLOR;
-        this.ctx.fillRect(
+    this.ctx.stroke();
+  }
+
+  private drawCellsWithColor(ctx: CanvasRenderingContext2D, aliveStatus: boolean, colorString: string) {
+    ctx.fillStyle = colorString;
+    const height = this.universe.height();
+    const width = this.universe.width();
+    for (let row = 0; row < height; row++) {
+      for (let col = 0; col < width; col++) {
+        const idx = row * width + col;
+        const alive = this.universe.cell_state(idx);
+        if (alive !== aliveStatus) {
+          continue;
+        }
+
+        ctx.fillRect(
           col * (UniverseRenderer.CELL_SIZE + 1) + 1,
           row * (UniverseRenderer.CELL_SIZE + 1) + 1,
           UniverseRenderer.CELL_SIZE,
@@ -88,8 +101,6 @@ export class UniverseRenderer {
         );
       }
     }
-
-    this.ctx.stroke();
   }
 
   public isPaused = () => this.animationId === null;
@@ -137,6 +148,12 @@ export class UniverseRenderer {
       this.drawGrid();
       this.drawCells();
     });
+  }
+
+  private accelerateTicks() {
+    for (let i = 0; i < TICKS_PER_RENDER; i++) {
+      this.universe.tick();
+    }
   }
 }
 

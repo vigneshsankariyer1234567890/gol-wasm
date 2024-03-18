@@ -5,6 +5,8 @@ use std::fmt;
 use random_seed::SeededRandom;
 use fixedbitset::FixedBitSet;
 
+use crate::utils::Timer;
+
 
 // Single byte representation here needed.
 // As we go along, we may need to edit this to include other information as well
@@ -50,6 +52,7 @@ impl Universe {
   // and then saving it somehow
   // TODO: Use threads to parallelize calculation of next cells
   pub fn tick(&mut self) {
+    let _timer = Timer::new("Wasm Universe::tick");
     let mut next = self.cells.clone();
 
     for row in 0..self.height {

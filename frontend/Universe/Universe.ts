@@ -41,6 +41,8 @@ export class Universe implements IUniverse {
     return this.curr_height;
   }
   tick(): void {
+    let curr_time = performance.now();
+
     let new_cells = Array.from(this.curr_cells);
 
     for (let row = 0; row < this.curr_height; row++) {
@@ -53,6 +55,9 @@ export class Universe implements IUniverse {
     }
 
     this.curr_cells = new_cells;
+
+    let next_time = performance.now();
+    console.log(`TSUniverse::tick: ${next_time - curr_time}ms`);
   }
   cell_state(index: number): boolean {
     return this.curr_cells[index];
