@@ -1,14 +1,13 @@
-import { Universe } from "gol_wasm/gol_wasm";
-import { UniverseRenderer } from "./UniverseRenderer";
+import { Universe as WasmUniverse } from "gol_wasm/gol_wasm";
+import { Universe as TsUniverse } from "./Universe/Universe";
+import { initAndRunRenderer } from "./UniverseRenderer/UniverseRenderer";
 
 const HEIGHT = 100;
 const WIDTH = 100;
 const SEED = 123456789n;
 
-const wasmUniverse = new Universe(HEIGHT, WIDTH, SEED);
+const wasmUniverse = new WasmUniverse(HEIGHT, WIDTH, SEED);
+const tsUniverse = new TsUniverse(HEIGHT, WIDTH, SEED);
 
-const renderer = new UniverseRenderer(wasmUniverse, "gol-canvas-wasm", HEIGHT, WIDTH);
-
-renderer.drawGrid();
-renderer.drawCells();
-requestAnimationFrame(renderer.renderLoop);
+initAndRunRenderer(wasmUniverse, "gol-canvas-wasm", HEIGHT, WIDTH);
+initAndRunRenderer(tsUniverse, "gol-canvas-ts", HEIGHT, WIDTH);

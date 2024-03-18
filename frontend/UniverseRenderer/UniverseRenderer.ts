@@ -1,11 +1,4 @@
-export interface IUniverse {
-  render(): string;
-  width(): number;
-  height(): number;
-  cells(): number;
-  tick(): void;
-  cell_state(index: number): boolean;
-}
+import { IUniverse } from "../Universe/types";
 
 export class UniverseRenderer {
   private readonly universe: IUniverse;
@@ -83,4 +76,11 @@ export class UniverseRenderer {
 
     this.ctx.stroke();
   }
+}
+
+export const initAndRunRenderer = (universe: IUniverse, canvasId: string, height: number, width: number) => {
+  const renderer = new UniverseRenderer(universe, canvasId, height, width);
+  renderer.drawGrid();
+  renderer.drawCells();
+  requestAnimationFrame(renderer.renderLoop);
 }
