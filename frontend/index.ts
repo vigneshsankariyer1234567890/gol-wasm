@@ -1,13 +1,17 @@
 import { Universe as WasmUniverse } from "gol_wasm/gol_wasm";
 import { Universe as TsUniverse } from "./Universe/Universe";
 import { initAndRunRenderer } from "./UniverseRenderer/UniverseRenderer";
+import { FPSTimer } from "./FPSTimer/FPSTimer";
 
-const HEIGHT = 400;
-const WIDTH = 400;
-const SEED = 123456789n;
+const HEIGHT = 300;
+const WIDTH = 300;
+const SEED = 999999999n;
 
 const wasmUniverse = new WasmUniverse(HEIGHT, WIDTH, SEED);
 const tsUniverse = new TsUniverse(HEIGHT, WIDTH, SEED);
 
-initAndRunRenderer(wasmUniverse, "gol-canvas-wasm", HEIGHT, WIDTH);
-initAndRunRenderer(tsUniverse, "gol-canvas-ts", HEIGHT, WIDTH);
+const wasmTimer = new FPSTimer("fps-wasm");
+const tsTimer = new FPSTimer("fps-ts");
+
+initAndRunRenderer(wasmUniverse, "gol-canvas-wasm", "play-pause-wasm", HEIGHT, WIDTH, wasmTimer);
+initAndRunRenderer(tsUniverse, "gol-canvas-ts", "play-pause-ts", HEIGHT, WIDTH, tsTimer);

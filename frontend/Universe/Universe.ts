@@ -30,6 +30,10 @@ export class Universe implements IUniverse {
 
     this.randomizeCells();
   }
+  toggle_cell(row: number, col: number): void {
+    const idx = this.getIndex(row, col);
+    this.curr_cells[idx] = !this.curr_cells[idx];
+  }
   width(): number {
     return this.curr_width;
   }

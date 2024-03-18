@@ -12,19 +12,31 @@
             align-items: center;
             height: 100vh;
             margin: 0;
+            overflow-x: auto;
         }
         .canvas-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             margin: 0 20px;
+        }
+        .fps {
+          white-space: pre;
+          font-family: monospace;
         }
     </style>
 </head>
 <body>
     <div class="canvas-container">
         <h2>Wasm Universe</h2>
+        <button id="play-pause-wasm"></button>
+        <div id="fps-wasm" class="fps"></div>
         <canvas id="gol-canvas-wasm"></canvas>
     </div>
     <div class="canvas-container">
         <h2>TypeScript Universe</h2>
+        <button id="play-pause-ts"></button>
+        <div id="fps-ts" class="fps"></div>
         <canvas id="gol-canvas-ts"></canvas>
     </div>
     <script type="module" src="./bootstrap.js"></script>

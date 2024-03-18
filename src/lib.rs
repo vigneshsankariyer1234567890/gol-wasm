@@ -130,6 +130,11 @@ impl Universe {
 
     self.cells = cells
   }
+
+  pub fn toggle_cell(&mut self, row: u32, col: u32) {
+    let idx = self.get_index(row, col);
+    self.cells.set(idx, !self.cells.contains(idx));
+  }
 }
 
 impl fmt::Display for Universe {

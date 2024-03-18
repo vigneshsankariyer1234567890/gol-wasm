@@ -1,36 +1,51 @@
+import { FPSTimer } from "../FPSTimer/FPSTimer";
 import { IUniverse } from "../Universe/types";
 
 export class UniverseRenderer {
   private readonly universe: IUniverse;
   private readonly canvas: HTMLCanvasElement;
+  private readonly playPauseButton: HTMLButtonElement;
   private readonly ctx: CanvasRenderingContext2D | null;
+  private animationId: number | null;
+  private fpsTimer: FPSTimer;
 
-  public static readonly CELL_SIZE = 0.5; // px
+  public static readonly CELL_SIZE = 1; // px
   public static readonly GRID_COLOR = "#CCCCCC";
   public static readonly DEAD_COLOR = "#FFFFFF";
   public static readonly ALIVE_COLOR = "#000000";
 
-  constructor(universe: IUniverse, canvasId: string, private height: number, private width: number) {
+  constructor(universe: IUniverse, canvasId: string, private height: number, private width: number, playPauseButtonId: string, fpsTimer: FPSTimer) {
     this.universe = universe;
     const canvas = document.getElementById(canvasId) as HTMLCanvasElement | null;
     if (!canvas) {
       throw new Error(`Canvas with id ${canvasId} not found`);
     }
     this.canvas = canvas;
+    this.addCanvasEvent();
+
+    const button = document.getElementById(playPauseButtonId) as HTMLButtonElement | null;
+    if (!button) {
+      throw new Error(`Button with id ${playPauseButtonId} not found`);
+    }
+    this.playPauseButton = button;
+    this.addButtonEvent();
+
     this.ctx = this.canvas.getContext('2d');
 
     this.canvas.height = (UniverseRenderer.CELL_SIZE + 1) * this.height + 1;
     this.canvas.width = (UniverseRenderer.CELL_SIZE + 1) * this.width + 1;
 
-    this.drawGrid();
-    this.drawCells();
-    requestAnimationFrame(this.renderLoop);
+    this.animationId = null;
+
+    this.fpsTimer = fpsTimer;
   }
 
   public renderLoop = () => {
+    this.fpsTimer.render();
     this.universe.tick();
+    this.drawGrid();
     this.drawCells();
-    requestAnimationFrame(this.renderLoop);
+    this.animationId = requestAnimationFrame(this.renderLoop);
   };
 
   public drawGrid() {
@@ -76,11 +91,56 @@ export class UniverseRenderer {
 
     this.ctx.stroke();
   }
+
+  public isPaused = () => this.animationId === null;
+
+  play = () => {
+    this.playPauseButton.textContent = "⏸";
+    this.renderLoop();
+  }
+
+  pause = () => {
+    this.playPauseButton.textContent = "▶";
+    cancelAnimationFrame(this.animationId as number);
+    this.animationId = null;
+  }
+
+  private addButtonEvent() {
+    this.playPauseButton.addEventListener("click", (event) => {
+      if (this.isPaused()) {
+        this.play();
+      } else {
+        this.pause();
+      }
+    });
+  }
+
+  private addCanvasEvent() {
+    this.canvas.addEventListener("click", event => {
+      if (!this.isPaused()) {
+        return;
+      }
+
+      const boundingRect = this.canvas.getBoundingClientRect();
+    
+      const scaleX = this.canvas.width / boundingRect.width;
+      const scaleY = this.canvas.height / boundingRect.height;
+    
+      const canvasLeft = (event.clientX - boundingRect.left) * scaleX;
+      const canvasTop = (event.clientY - boundingRect.top) * scaleY;
+    
+      const row = Math.min(Math.floor(canvasTop / (UniverseRenderer.CELL_SIZE + 1)), this.height - 1);
+      const col = Math.min(Math.floor(canvasLeft / (UniverseRenderer.CELL_SIZE + 1)), this.width - 1);
+    
+      this.universe.toggle_cell(row, col);
+    
+      this.drawGrid();
+      this.drawCells();
+    });
+  }
 }
 
-export const initAndRunRenderer = (universe: IUniverse, canvasId: string, height: number, width: number) => {
-  const renderer = new UniverseRenderer(universe, canvasId, height, width);
-  renderer.drawGrid();
-  renderer.drawCells();
-  requestAnimationFrame(renderer.renderLoop);
+export const initAndRunRenderer = (universe: IUniverse, canvasId: string, buttonId: string, height: number, width: number, fpsTimer: FPSTimer) => {
+  const renderer = new UniverseRenderer(universe, canvasId, height, width, buttonId, fpsTimer);
+  renderer.pause();
 }
