@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "es2020",                       // Changed to es2020 to allow for BigInt
+    "module": "esnext",                       // Use 'esnext' for dynamic import() handling
+    "strict": true,                           // Enable strict type-checking options
+    "esModuleInterop": true,                  // Emit additional JavaScript to ease support for importing CommonJS modules
+    "forceConsistentCasingInFileNames": true, // Ensure consistent casing in user-defined references
+    "moduleResolution": "node",               // Resolve modules using Node.js style
+    "resolveJsonModule": true,                // Include this if you plan to import JSON files
+    "sourceMap": true,                        // Enable source map generation for debugging
+    "outDir": "./dist",                       // The output directory for all emitted files
+    "baseUrl": ".",                           // Base directory to resolve non-relative module names
+    "paths": {                                // Specify paths for aliases (if you have any)
+      "*": ["node_modules/*", "src/types/*"]
+    },
+    "lib": ["dom", "es6"],                    // Lib files to be included in the compilation
+    "allowJs": true,                          // Allow JavaScript files to be compiled
+    "skipLibCheck": true                      // Skip type checking of all declaration files
+  },
+  "include": ["./**/*"],                    // Include all files in the src folder
+  "exclude": ["node_modules", "dist"]         // Exclude the node_modules and dist folders
+}

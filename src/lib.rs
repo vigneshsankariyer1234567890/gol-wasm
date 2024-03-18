@@ -116,6 +116,10 @@ impl Universe {
     self.reset_cells()
   }
 
+  pub fn cell_state(&mut self, index: usize) -> bool {
+    self.cells.contains(index)
+  }
+
   fn reset_cells(&mut self) {
     let new_size = (self.width * self.height) as usize;
     let mut cells = FixedBitSet::with_capacity(new_size);
