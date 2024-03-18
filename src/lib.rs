@@ -105,6 +105,27 @@ impl Universe {
   pub fn cells(&self) -> *const usize {
       self.cells.as_slice().as_ptr()
   }
+
+  pub fn set_width(&mut self, width: u32) {
+    self.width = width;
+    self.reset_cells()
+  }
+
+  pub fn set_height(&mut self, height: u32) {
+    self.height = height;
+    self.reset_cells()
+  }
+
+  fn reset_cells(&mut self) {
+    let new_size = (self.width * self.height) as usize;
+    let mut cells = FixedBitSet::with_capacity(new_size);
+
+    for i in 0..new_size {
+      cells.set(i, false);
+    }
+
+    self.cells = cells
+  }
 }
 
 impl fmt::Display for Universe {
