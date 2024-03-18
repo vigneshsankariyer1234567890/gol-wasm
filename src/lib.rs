@@ -71,6 +71,7 @@ impl Universe {
     self.cells = next;
   }
 
+  #[wasm_bindgen(constructor)]
   pub fn new(height: u32, width: u32, seed: u64) -> Universe {
     let mut random = SeededRandom::new(seed);
 
@@ -93,6 +94,18 @@ impl Universe {
 
   pub fn render(&self) -> String {
     self.to_string()
+  }
+
+  pub fn width(&self) -> u32 {
+    self.width
+  }
+
+  pub fn height(&self) -> u32 {
+      self.height
+  }
+
+  pub fn cells(&self) -> *const Cell {
+      self.cells.as_ptr()
   }
 }
 
