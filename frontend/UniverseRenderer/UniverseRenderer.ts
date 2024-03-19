@@ -1,7 +1,7 @@
 import { FPSTimer } from "../FPSTimer/FPSTimer";
 import { IUniverse } from "../Universe/types";
 
-const TICKS_PER_RENDER = 20;
+const TICKS_PER_RENDER = 7;
 export class UniverseRenderer {
   private readonly universe: IUniverse;
   private readonly canvas: HTMLCanvasElement;
@@ -10,7 +10,7 @@ export class UniverseRenderer {
   private animationId: number | null;
   private fpsTimer: FPSTimer;
 
-  public static readonly CELL_SIZE = 1; // px
+  public static readonly CELL_SIZE = 1.1; // px
   public static readonly GRID_COLOR = "#CCCCCC";
   public static readonly DEAD_COLOR = "#FFFFFF";
   public static readonly ALIVE_COLOR = "#000000";
@@ -159,5 +159,6 @@ export class UniverseRenderer {
 
 export const initAndRunRenderer = (universe: IUniverse, canvasId: string, buttonId: string, height: number, width: number, fpsTimer: FPSTimer) => {
   const renderer = new UniverseRenderer(universe, canvasId, height, width, buttonId, fpsTimer);
+  renderer.drawGrid();
   renderer.pause();
 }
